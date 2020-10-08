@@ -11,8 +11,7 @@ function getDb()
 }
 
 function getIdByFilename($db, $filename) {
-    $result = mysqli_query($db, 'SELECT ID FROM gallery WHERE filename = ' . $filename);  
-    var_dump($result);
+    $result = mysqli_query($db, 'SELECT ID FROM gallery WHERE filename = "' . $filename . '"');  
     return ($result) ? mysqli_fetch_assoc($result)['ID'] : NULL;  
 }    
 
