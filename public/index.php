@@ -1,9 +1,13 @@
 <?php
-	include 'core/config.php';
-	include 'core/get_images.php';	
-	include 'core/class_simple_image.php';
-	include 'core/upload.php';
+	include '../config/config.php';
+	include '../engine/get_images.php';	
+	include '../engine/class_simple_image.php';
+	include '../engine/upload.php';
+	include '../engine/db.php';
+
 	$images = getImages(PATH_SMALL_IMAGES, EXT_IMAGES);
+
+	$db = getDb();
 
 ?>
 <!DOCTYPE html>
