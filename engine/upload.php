@@ -22,7 +22,8 @@ if (isset($_POST['load']))
         $image = new SimpleImage();
         $image->load($path);
         $image->resizeToWidth(150);
-        $image->save($path_small);        
+        $image->save($path_small);     
+        addImageToDB($db, $_FILES['myfile']['name']);   
         header("Location: index.php?message=OK");
     } else {
         header("Location: index.php?message=ERROR");
