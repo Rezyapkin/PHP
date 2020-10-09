@@ -8,8 +8,3 @@ function get_file_extension($filename) {
 function isImage($value) {
     return in_array(get_file_extension($value), EXT_IMAGES);
 }
-
-function getImages($path) {
-    $files = scandir($path);
-    return array_filter($files, 'isImage');
-}

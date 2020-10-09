@@ -1,10 +1,16 @@
 <?php
 
 include '../engine/db.php';
+include '../engine/gallery.php';
+include '../engine/functions.php';
 include '../config/config.php';
-include '../engine/get_images.php';	
 
-$images = getImages(PATH_SMALL_IMAGES, EXT_IMAGES);
+function getImages($path) {
+    $files = scandir($path);
+    return array_filter($files, 'isImage');
+}
+
+$images = getImages(PATH_SMALL_IMAGES);
 
 $db = getDb();
 
@@ -18,4 +24,5 @@ foreach ($images as $image) {
 
 ?>
 
-<p>Добавлено изображений в галлерею: <?=$count?></p>
+<p>Изображений в папке : <?=count($images)?></p>
+<p>Добавлено изображений в базу данных: <?=$count?></p>

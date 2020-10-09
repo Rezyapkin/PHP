@@ -1,13 +1,13 @@
 <?php
 	include '../config/config.php';
-	include '../engine/get_images.php';	
 	include '../engine/class_simple_image.php';
 	include '../engine/upload.php';
 	include '../engine/db.php';
-
-	$images = getImages(PATH_SMALL_IMAGES, EXT_IMAGES);
+	include '../engine/gallery.php';
+	include '../engine/functions.php';
 
 	$db = getDb();
+	$images = getImages($db);
 
 ?>
 <!DOCTYPE html>
@@ -38,8 +38,8 @@
 
 	<div class="gallery">
 	    <?php foreach ($images as $image): ?>
-			<a rel="gallery" class="photo" href="<?=PATH_BIG_IMAGES . '/' . $image ?>" >
-			<img src="<?=PATH_SMALL_IMAGES . '/' . $image ?>" width="150" height="100" /></a>
+			<a rel="gallery" class="photo" href="<?=PATH_BIG_IMAGES . '/' . $image['filename'] ?>" >
+			    <img src="<?=PATH_SMALL_IMAGES . '/' . $image['filename'] ?>" width="150" height="100" alt="Просмотров: <?=$image['views']?>"/></a>
         <?php endforeach; ?>
 	</div>
 	
