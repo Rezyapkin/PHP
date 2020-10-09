@@ -39,3 +39,12 @@ form {
 .error_text {
 	color: red;
 }
+
+.menu{
+	color: white;
+	margin-bottom: 20px;
+}
+
+.menu a{
+	color: white;
+}

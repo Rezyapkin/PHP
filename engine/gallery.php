@@ -9,6 +9,15 @@ function getIdByFilename($db, $filename) {
     return ($result) ? mysqli_fetch_assoc($result)['ID'] : NULL;  
 }    
 
+function getImageById($db, $id) {
+    $result = mysqli_query($db, 'SELECT * FROM gallery WHERE ID = "' . $id . '"');  
+    return ($result) ? mysqli_fetch_assoc($result) : NULL;  
+}    
+
+function addViewImage($db, $id) {
+    return mysqli_query($db, 'UPDATE gallery SET views = views + 1 WHERE ID = "' . $id . '"'); 
+}
+
 function addImageToDB($db, $filename) {
     //Файл уже добавлен в галерею ранее
     if (getIdByFilename($db, $filename)) {
