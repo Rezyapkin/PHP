@@ -1,11 +1,5 @@
 <?php
 
-$error_messages = [
-    'OK' => 'Сообщение добавлено',
-    'DELETE' => 'Сообщение удалено',
-    'EDIT' => 'Сообщение изменено',
-    'ERROR' => 'Ошибка'
-];
 
 define("ROOT", $_SERVER['DOCUMENT_ROOT']);
 define("TEMPLATES_DIR", ROOT . "/../templates/");

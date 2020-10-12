@@ -1,35 +1,35 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . '/../config/config.php';
+global $typesFeedback;
 
-//По заданию было сказано, что нужно заменить отзывами к товарам. Предлагаю сделать универсальный API, который будет работать и с общими отзывами и с отзывами товаров
-
+$messages = [
+    'add' => 'Отзыв опубликован',
+    'save' => 'Отзыв изменен',
+    'delete' => 'Отзыв удален',        
+];
 
 if ($_POST) {
-
     $action = $_POST['action'];
-    $type = ($typesFeedback[$_POST['type']]) ? $_POST['type'] : 'site';
-    $c_id = isset($_POST['c_id']) ? (int)$_POST['c_id'] : null;
+ 
+    $params = [
+        'id' => is_null($_POST['id']) ?  null : (int)$_POST['id'],
+        'type' => ($typesFeedback[$_POST['type']]) ? $_POST['type'] : 'site',
+        'name' => mysqli_real_escape_string(getDb(), (string)htmlspecialchars(strip_tags($_POST['name']))),
+        'feedback' => mysqli_real_escape_string(getDb(), (string)htmlspecialchars(strip_tags($_POST['feedback']))),
+        'c_id' => isset($_POST['c_id']) ? (int)$_POST['c_id'] : null, //это id элемента к которому оставляются отзывы
+    ];
 
-    $id = (int)$_POST['id'];
-    $result = doFeedbackAction($action, $id, $type, $c_id);
+    $result = doFeedbackAction($action, $params);
     if ($result) {
-        $response = ['result'=> $result];
+        if ($action == 'add') {
+            $params['id'] = mysqli_insert_id(getDb());
+        }
+        $params['action'] = $action;
+        $response = ['result'=> $params];
 
-        switch ($action) {
-            case 'add':
-                $response['message'] = "Отзыв опубликован";
-                break;
-        
-            case 'save':
-                $response['message'] = "Отзыв изменен";
-                break;
-        
-            case 'delete':
-                $response['message'] = "Отзыв удален";
-                break;    
-
-            }   
+        if ($messages[$action]) {
+            $response['message'] = $messages[$action];    
+        }
 
         echo json_encode($response);        
     } else {

@@ -7,20 +7,26 @@ function prepareVariables(&$page, $action='', $id=0)
 {
     $params = [];
     $params['layout'] = 'main';
+    $uri = explode('?',$_SERVER['REQUEST_URI'])[0];
 
     switch ($page) {
         case 'index':
             $params['name'] = 'admin';
             break;
+        case 'api':
+            $fileName = ROOT . $uri. ".php";
+            if (file_exists($fileName)) {
+                include $fileName;
+                Die();
+            } else {
+                header('HTTP/1.0 404 Not Found');
+                header('Status: 404 Not Found');
+                Die("Метод API {$_SERVER['REQUEST_URI']} не существует.");
+            }            
+            break;
 
         case 'feedback':
-            global $error_messages;
-            $params['message'] = $error_messages[$_GET['message']];
-            $params['action'] = 'add';
-            $params['button'] = 'Отправить';
-
             doFeedbackAction($action, $id, $params);
-
             $params['feedback'] = getAllFeedback();
 
             break;

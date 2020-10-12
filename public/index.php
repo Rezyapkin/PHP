@@ -12,8 +12,7 @@ $url_array = explode('/', explode('?',$_SERVER['REQUEST_URI'])[0]); //Видео
 
 if (is_numeric($url_array[2])) {
     $id = (int)$url_array[2];
-} else {
-
+} else  {
     $id = (int)$url_array[3];
 }
 

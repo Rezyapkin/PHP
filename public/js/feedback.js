@@ -1,46 +1,60 @@
-function renderFeedBacks(id = 'feedback') {
+let feedbacks = document.getElementById('feedback');
+
+function clearFormFeedBack() {
+    $("#send_feedback").val("Отправить");
+    $("#send_feedback").data()['action'] = "add";
+    $("#fb_name").val('');
+    $("#fb_message").val('');
+}
+
+function templateFeedBack(fb) {
+    return `
+    <div data-name='${fb.name}' data-message='${fb.feedback}' data-id='${fb.id}' id='${"fb_"+fb.id}'>
+       <strong>${fb.name}</strong>: 
+       <div>
+           ${fb.feedback} <a href="" data-id='${fb.id}' class='edit'>[edit]</a> 
+           <a href="" data-id='${fb.id}' class='delete'>[x]</a>
+        </div>
+        <hr>
+    </div>`;
+
+}
+
+//Отрисовывает все отзывы
+function renderFeedBack(id = 'feedback') {
     var tp = $("#fb_type").val();
     var c_id = $("#fb_c_id").val();
     $.ajax({
-        url: "/api/feedback.php" + ((tp) ? ("?type=" + tp + "&c_id=" + c_id) : ""),
+        url: "/api/feedback" + ((tp) ? ("?type=" + tp + "&c_id=" + c_id) : ""),
         type: "GET",
         error: function() {alert("Что-то пошло не так...");},
         success: function(answer) {
             let feedback = JSON.parse(answer);
             if (feedback.result) {
                 document.getElementById(id).innerHTML = '';
-                $("#send_feedback").val("Отправить");
-                $("#send_feedback").data()['action'] = "add";
-                $("#fb_name").val('');
-                $("#fb_message").val('');
                 for (feed in feedback.result) {
-                    document.getElementById(id).insertAdjacentHTML("beforeend", `
-                    <div data-name='${feedback.result[feed].name}' data-message='${feedback.result[feed].feedback}'>
-                    <strong>${feedback.result[feed].name}</strong>: 
-                    <div>
-                        ${feedback.result[feed].feedback} <a href="" data-id='${feedback.result[feed].id}' class='edit'>[edit]</a> 
-                        <a href="" data-id='${feedback.result[feed].id}' class='delete'>[x]</a>
-                    </div>
-                </div><hr>`);
-
+                    feedbacks.insertAdjacentHTML("beforeend", templateFeedBack(feedback.result[feed]));
                 }
-
-                setEventHandlers();                                        
+                setEventHandlers();  
+                clearFormFeedBack();                                      
             }
         }				
     })   
 };
 
-
+//Переходит  в режим редактирования отзыва
+function setEditMode(dataset) {
+    $("#fb_name").val(dataset['name']);
+    $("#fb_message").val(dataset['message']);
+    $("#fb_id").val(dataset['id']);
+    $("#send_feedback").val("Изменить");
+    $("#send_feedback").data()['action'] = "save";    
+}    
 
 function setEventHandlers() {
     $(".edit").on('click', function(evt){
         var par = evt.target.parentElement.parentElement;
-        $("#fb_name").val(par.dataset['name']);
-        $("#fb_message").val(par.dataset['message']);
-        $("#fb_id").val(evt.target.dataset['id']);
-        $("#send_feedback").val("Изменить");
-        $("#send_feedback").data()['action'] = "save";
+        setEditMode(par.dataset);
         evt.preventDefault();
     });   
 
@@ -50,11 +64,29 @@ function setEventHandlers() {
     });       
 }
 
+function correctFeedBack(params) {
+    var el = $("#fb_"+params.id);
+    switch (params.action) {
+        case 'delete':
+            el.remove();
+            break;
+        case 'save':
+            el.replaceWith(templateFeedBack(params));
+            setEventHandlers();
+            break;
+        case 'add':
+            feedbacks.insertAdjacentHTML("afterbegin", templateFeedBack(params));
+            setEventHandlers();
+            break;        
+    }
+    clearFormFeedBack();
+}
+
 function doFeedBack(action, id) {
     var name = $("#fb_name").val();
     var feedback = $("#fb_message").val();  
     $.ajax({
-        url: "/api/feedback.php",
+        url: "/api/feedback",
         type: "POST",
         dataType : "json",
         data:{
@@ -66,12 +98,10 @@ function doFeedBack(action, id) {
             c_id: $("#fb_c_id").val(),
         },
         error: function() {alert("Что-то пошло не так...");},
-        success: function(answer){
-            if (answer.message) {
-                document.getElementById('message').innerHTML = answer.message;   
-            }	            
+        success: function(answer){           
             if (answer.result) {
-                renderFeedBacks();    
+                correctFeedBack(answer.result);   
+                document.getElementById('message').innerHTML = answer.message; 
             }
             if (answer.error) {
                 alert("Что-то пошло не так...");   
@@ -81,7 +111,7 @@ function doFeedBack(action, id) {
 }
 
 $(document).ready(function() {
-    renderFeedBacks();
+    renderFeedBack();
     $("#send_feedback").on('click', function(evt){
         var id = $("#fb_id").val();
         doFeedBack($("#send_feedback").data()['action'], id);
