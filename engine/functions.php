@@ -3,9 +3,11 @@
 
 //Для каждой страницы готовим массив со своим набором переменных
 //для подстановки их в соотвествующий шаблон
-function prepareVariables($page, $action='', $id=0)
+function prepareVariables(&$page, $action='', $id=0)
 {
     $params = [];
+    $params['layout'] = 'main';
+
     switch ($page) {
         case 'index':
             $params['name'] = 'admin';
@@ -32,31 +34,32 @@ function prepareVariables($page, $action='', $id=0)
             break;
 
         case 'news':
+            if ($id > 0) {
+                $params['news'] = getOneNews($id);
+                if ($params['news']) {
+                    $page = 'newsOne';
+                    break;  
+                }              
+            }
             $params['news'] = getNews();
-            if ($action = 'edit') {}
-            break;
-
-        case 'newsOne':
-            $id = (int)$_GET['id'];
-            $params['news'] = getOneNews($id);
             break;
 
         case 'catalog':
-            $params['catalog'] = [
-                [
-                    'name' => 'Пицца',
-                    'price' => 24
-                ],
-                [
-                    'name' => 'Чай',
-                    'price' => 1
-                ],
-                [
-                    'name' => 'Яблоко',
-                    'price' => 12
-                ],
-            ];
-            break;
+            if ($id > 0) {
+                $params['product'] = getProductById($id);
+                if ($params['product']) {
+                    $page = 'catalogOne';
+                    break;  
+                }              
+            } 
+            $params['catalog'] = getProducts();
+            break;    
+
+        default:
+            header('HTTP/1.0 404 Not Found');
+            header('Status: 404 Not Found');
+            $page = '404';
+
     }
     return $params;
 }
@@ -66,7 +69,7 @@ function prepareVariables($page, $action='', $id=0)
 //переменную $content главного шаблона layout для всех страниц
 function render($page, array $params = [])
 {
-    return renderTemplate(LAYOUTS_DIR . 'main', [
+    return renderTemplate(LAYOUTS_DIR . $params['layout'], [
         'menu' => renderTemplate('menu', $params),
         'content' => renderTemplate($page, $params)
     ]);

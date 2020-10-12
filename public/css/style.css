@@ -1,0 +1,38 @@
+
+.product-item {
+    margin-bottom: 20px;
+    margin-right: 20px;
+    clear: both;
+}
+
+.product-item__link {
+    display: block;
+    padding: 0px 10px;
+}
+
+.products {
+    display: flex;
+    flex-wrap: wrap; 
+}
+
+.product_item__price {
+    font-weight: bold;
+    padding: 10px;
+    float: left;
+}
+
+.btn-buy {
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.btn-buy:hover {
+    background-color: #555555;
+}
+
+.product-item .btn-buy {
+    float: right;
+}

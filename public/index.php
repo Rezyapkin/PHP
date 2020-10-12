@@ -3,12 +3,12 @@
 
 //Первым делом подключим файл с константами настроек
 //TODO Сделать пути абсолютными
-include "../config/config.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/../config/config.php";
 
 //Читаем параметр page из url, чтобы определить, какую страницу-шаблон
 //хочет увидеть пользователь, по умолчанию это будет index
 
-$url_array = explode('/', $_SERVER['REQUEST_URI']);
+$url_array = explode('/', explode('?',$_SERVER['REQUEST_URI'])[0]); //Видеоизменил для работы с GET параметрами
 
 if (is_numeric($url_array[2])) {
     $id = (int)$url_array[2];
@@ -20,7 +20,7 @@ if (is_numeric($url_array[2])) {
 if ($url_array[1] == "") {
     $page = 'index';
 } else {
-    $page = explode('?', $url_array[1])[0];
+    $page = $url_array[1];
 }
 
 $params = prepareVariables($page, $action, $id);
