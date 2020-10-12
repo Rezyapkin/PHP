@@ -10,7 +10,7 @@ $messages = [
 
 if ($_POST) {
     $action = $_POST['action'];
- 
+
     $params = [
         'id' => is_null($_POST['id']) ?  null : (int)$_POST['id'],
         'type' => ($typesFeedback[$_POST['type']]) ? $_POST['type'] : 'site',
@@ -18,7 +18,6 @@ if ($_POST) {
         'feedback' => mysqli_real_escape_string(getDb(), (string)htmlspecialchars(strip_tags($_POST['feedback']))),
         'c_id' => isset($_POST['c_id']) ? (int)$_POST['c_id'] : null, //это id элемента к которому оставляются отзывы
     ];
-
     $result = doFeedbackAction($action, $params);
     if ($result) {
         if ($action == 'add') {

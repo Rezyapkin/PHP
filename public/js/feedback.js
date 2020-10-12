@@ -1,5 +1,6 @@
 let feedbacks = document.getElementById('feedback');
 
+//Очистить форму отзыва
 function clearFormFeedBack() {
     $("#send_feedback").val("Отправить");
     $("#send_feedback").data()['action'] = "add";
@@ -7,6 +8,7 @@ function clearFormFeedBack() {
     $("#fb_message").val('');
 }
 
+//Шаблон отзыва
 function templateFeedBack(fb) {
     return `
     <div data-name='${fb.name}' data-message='${fb.feedback}' data-id='${fb.id}' id='${"fb_"+fb.id}'>
@@ -51,6 +53,7 @@ function setEditMode(dataset) {
     $("#send_feedback").data()['action'] = "save";    
 }    
 
+//Навесить обработчики изменения и удаления отзыва
 function setEventHandlers() {
     $(".edit").on('click', function(evt){
         var par = evt.target.parentElement.parentElement;
@@ -64,6 +67,7 @@ function setEventHandlers() {
     });       
 }
 
+//Изменить список отзывов AJAX
 function correctFeedBack(params) {
     var el = $("#fb_"+params.id);
     switch (params.action) {
@@ -82,6 +86,7 @@ function correctFeedBack(params) {
     clearFormFeedBack();
 }
 
+//Работа с отзывами на сервере через AJAX
 function doFeedBack(action, id) {
     var name = $("#fb_name").val();
     var feedback = $("#fb_message").val();  
@@ -110,6 +115,7 @@ function doFeedBack(action, id) {
     });    
 }
 
+//После загрузки документа отрисуем отзывы и навесим обработчик на кнопку отправить
 $(document).ready(function() {
     renderFeedBack();
     $("#send_feedback").on('click', function(evt){

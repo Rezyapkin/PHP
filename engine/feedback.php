@@ -32,7 +32,7 @@ function addFeedBack($params) {
     $type = getTableFeedBack($params['type']);
     if ($params['name'] && $params['feedback']) {
 
-        if (isset($params['c_id'])) {
+        if (!isset($params['c_id'])) {
             $sql = "INSERT INTO {$type} (name, feedback) VALUES ('{$params["name"]}', '{$params["feedback"]}')";
         } else {
             $sql = "INSERT INTO {$type} (name, feedback, {$params['type']}_id) 
