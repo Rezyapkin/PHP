@@ -30,48 +30,26 @@ function deleteFeedBack($id) {
 
 function getFeedBackById($id) {
     $sql = "SELECT * FROM feedback WHERE id ='{$id}'";
-    return getAssocResult($sql);
+    return getAssocResult($sql)[0];
 }    
 
-function doFeedbackAction($action, $id, &$params) {
+function doFeedbackAction($action, $id) {
 switch ($action) {
     case 'add':
-        if (addFeedBack()) {
-             header("Location: /feedback?message=OK");
-        } else {
-            header("Location: /feedback?message=ERROR");
-        }    
+        return addFeedBack();
         break;
 
     case 'save':
-        if (updateFeedBack($id)) {
-            header("Location: /feedback?message=EDIT");
-        } else {
-            header("Location: /feedback?message=ERROR");
-        }
+        return updateFeedBack($id);
         break;
 
     case 'delete':
-        if (deleteFeedBack($id)) {
-            header("Location: /feedback?message=DELETE");
-        } else {
-            header("Location: /feedback?message=ERROR");
-        }
+        return deleteFeedBack($id);
         break;    
 
-    case 'edit':
-        $result = getFeedBackById($id);
-        if ($result) {
-            $params['fb_name'] = $result[0]['name'];
-            $params['fb_message'] = $result[0]['feedback'];
-            $params['button'] = 'Изменить';
-            $params['action'] = 'save/' . $id;
-            
-        } else {
-            header("Location: /feedback");
-        }
+    case 'get':
+        return getFeedBackById($id);
         break;
 
     }
-
 }

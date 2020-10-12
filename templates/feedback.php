@@ -1,20 +1,15 @@
 <h2>Отзывы</h2>
-
-<?=$message?>
-<form action="/feedback/<?=$action?>/" method="post">
+<p id="message">
+<?=$message?></p>
+<form action="" method="post">
     Оставьте отзыв: <br>
-    <input type="text" name="name" placeholder="Ваше имя" value="<?=$fb_name?>"><br>
-    <textarea name="feedback" placeholder="Ваш отзыв" rows="5"><?=$fb_message?></textarea><br>
-    <input type="submit" value="<?=$button?>">
+    <input id="fb_id" type="text" name="id" hidden>
+    <input id="fb_name" type="text" name="name" placeholder="Ваше имя"><br>
+    <textarea  id="fb_message" name="feedback" placeholder="Ваш отзыв" rows="5"></textarea><br>
+    <input type="submit" value="Отправить" data-action="add" id="send_feedback">
 </form>
 <hr>
-<?php foreach ($feedback as $value): ?>
-    <div>
-        <strong><?=$value['name']?></strong>: 
-        <div>
-            <?=$value['feedback']?> <a href="/feedback/edit/<?=$value['id']?>">[edit]</a> 
-            <a href="/feedback/delete/<?=$value['id']?>">[x]</a>
-        </div>
-    </div>
-    <hr>
-<?php endforeach;?>
+<div id="feedback">
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/feedback.js"></script>

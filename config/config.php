@@ -19,10 +19,10 @@ define('USER', 'test');
 define('PASS', '12345');
 define('DB', 'geekbrains');
 
-include "../engine/db.php";
-include "../engine/log.php";
-include "../engine/gallery.php";
-include "../engine/news.php";
-include "../engine/catalog.php";
-include "../engine/feedback.php";
-include "../engine/functions.php";
+include ROOT . "/../engine/db.php";
+include ROOT . "/../engine/log.php";
+include ROOT . "/../engine/gallery.php";
+include ROOT . "/../engine/news.php";
+include ROOT . "/../engine/catalog.php";
+include ROOT . "/../engine/feedback.php";
+include ROOT . "/../engine/functions.php";
