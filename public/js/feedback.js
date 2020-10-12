@@ -1,6 +1,8 @@
 function renderFeedBacks(id = 'feedback') {
+    var tp = $("#fb_type").val();
+    var c_id = $("#fb_c_id").val();
     $.ajax({
-        url: "/api/feedback.php",
+        url: "/api/feedback.php" + ((tp) ? ("?type=" + tp + "&c_id=" + c_id) : ""),
         type: "GET",
         error: function() {alert("Что-то пошло не так...");},
         success: function(answer) {
@@ -60,6 +62,8 @@ function doFeedBack(action, id) {
             id: id,
             name: name,
             feedback: feedback,
+            type: $("#fb_type").val(),
+            c_id: $("#fb_c_id").val(),
         },
         error: function() {alert("Что-то пошло не так...");},
         success: function(answer){

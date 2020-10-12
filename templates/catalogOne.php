@@ -4,3 +4,4 @@
    <p><?=$product['description']?></p>
    <div class="product_item__price"><?=$product['price']?> &#8381;</div><a href="#" class="btn-buy">Купить</a>
 </div>
+<?=$feedback?>

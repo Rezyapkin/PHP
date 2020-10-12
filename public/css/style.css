@@ -36,3 +36,12 @@
 .product-item .btn-buy {
     float: right;
 }
+
+.product-item {
+    overflow: hidden;
+}
+
+.product-item::after {
+    display:block;
+    clear:both;
+}

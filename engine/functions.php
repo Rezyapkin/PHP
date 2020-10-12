@@ -49,6 +49,7 @@ function prepareVariables(&$page, $action='', $id=0)
                 $params['product'] = getProductById($id);
                 if ($params['product']) {
                     $page = 'catalogOne';
+                    $params['feedback'] = renderTemplate('feedback',['id' => $id, 'type' => 'product']);
                     break;  
                 }              
             } 

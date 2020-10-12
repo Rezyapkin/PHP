@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 12 2020 г., 14:05
+-- Время создания: Окт 12 2020 г., 15:48
 -- Версия сервера: 10.3.22-MariaDB
 -- Версия PHP: 7.1.33
 
@@ -39,11 +39,32 @@ CREATE TABLE `feedback` (
 
 INSERT INTO `feedback` (`id`, `name`, `feedback`) VALUES
 (1, 'admin', 'Все ок'),
-(2, 'Пользователь', 'Привет'),
 (4, 'Кто то ', 'Привет'),
 (5, 'admin', 'Забаню'),
 (6, 'Админ', 'Привет мир'),
-(10, 'Супер автор', 'Оставить отзыв');
+(10, 'Супер автор', 'Отличный отзыв');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `feedback_product`
+--
+
+CREATE TABLE `feedback_product` (
+  `id` int(11) NOT NULL,
+  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `feedback` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `feedback_product`
+--
+
+INSERT INTO `feedback_product` (`id`, `name`, `feedback`, `product_id`) VALUES
+(1, 'Дмитрий', 'Ноутбук игровой ASUS F571GT-BQ703T нереально крут!', 3),
+(2, 'Иван И.', 'ASUS TUF Gaming FX705 AMD Edition бомбический ноут!', 4),
+(4, 'Работает очень туго(', 'Отзывы работают не быстро', 3);
 
 -- --------------------------------------------------------
 
@@ -133,6 +154,13 @@ ALTER TABLE `feedback`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `feedback_product`
+--
+ALTER TABLE `feedback_product`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
 -- Индексы таблицы `gallery`
 --
 ALTER TABLE `gallery`
@@ -161,6 +189,12 @@ ALTER TABLE `feedback`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT для таблицы `feedback_product`
+--
+ALTER TABLE `feedback_product`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT для таблицы `gallery`
 --
 ALTER TABLE `gallery`
@@ -177,6 +211,16 @@ ALTER TABLE `news`
 --
 ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `feedback_product`
+--
+ALTER TABLE `feedback_product`
+  ADD CONSTRAINT `feedback_product_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
