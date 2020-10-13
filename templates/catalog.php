@@ -6,7 +6,7 @@
              <img class="product_item__img" src="/images/products/<?=$product['image']?>" alt="<?=$product['name']?>" >
              <p><?=$product['name']?></p>
         </a>
-        <div class="product_item__price"><?=$product['price']?> &#8381;</div><a href="#" class="btn-buy">В корзину</a>
+        <div class="product_item__price"><?=$product['price']?> &#8381;</div><a href="#" class="black-button btn-buy">В корзину</a>
     </div>
     <?php endforeach; ?>
 </div>

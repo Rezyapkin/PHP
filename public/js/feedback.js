@@ -2,7 +2,7 @@ let feedbacks = document.getElementById('feedback');
 
 //Очистить форму отзыва
 function clearFormFeedBack() {
-    $("#send_feedback").val("Отправить");
+    $("#send_feedback").text("Отправить");
     $("#send_feedback").data()['action'] = "add";
     $("#fb_name").val('');
     $("#fb_message").val('');
@@ -14,8 +14,8 @@ function templateFeedBack(fb) {
     <div data-name='${fb.name}' data-message='${fb.feedback}' data-id='${fb.id}' id='${"fb_"+fb.id}'>
        <strong>${fb.name}</strong>: 
        <div>
-           ${fb.feedback} <a href="" data-id='${fb.id}' class='edit'>[edit]</a> 
-           <a href="" data-id='${fb.id}' class='delete'>[x]</a>
+           ${fb.feedback} <a href="" data-id='${fb.id}' class='edit black-button black-button_sm'>Править</a> 
+           <a href="" data-id='${fb.id}' class='delete black-button  black-button_sm'>Х</a>
         </div>
         <hr>
     </div>`;
@@ -49,7 +49,7 @@ function setEditMode(dataset) {
     $("#fb_name").val(dataset['name']);
     $("#fb_message").val(dataset['message']);
     $("#fb_id").val(dataset['id']);
-    $("#send_feedback").val("Изменить");
+    $("#send_feedback").text("Изменить");
     $("#send_feedback").data()['action'] = "save";    
 }    
 

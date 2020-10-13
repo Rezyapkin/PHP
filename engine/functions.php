@@ -8,20 +8,23 @@ function prepareVariables(&$page, $action='', $id=0)
     $params = [];
     $params['layout'] = 'main';
     $uri = explode('?',$_SERVER['REQUEST_URI'])[0];
+    $uri_ar = explode('/',$uri);
 
     switch ($page) {
         case 'index':
             $params['name'] = 'admin';
             break;
         case 'api':
-            $fileName = ROOT . $uri. ".php";
+      
+            $fileName = ROOT . "/api/{$uri_ar[2]}.php";
             if (file_exists($fileName)) {
                 include $fileName;
+                doActionCart($uri_ar[3]);
                 Die();
             } else {
                 header('HTTP/1.0 404 Not Found');
                 header('Status: 404 Not Found');
-                Die("Метод API {$_SERVER['REQUEST_URI']} не существует.");
+                Die("API {$uri_ar[2]} не существует.");
             }            
             break;
 

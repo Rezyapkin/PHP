@@ -21,17 +21,6 @@
     float: left;
 }
 
-.btn-buy {
-    border-radius: 5px;
-    background-color: black;
-    color: white;
-    text-decoration: none;
-    padding: 10px;
-}
-
-.btn-buy:hover {
-    background-color: #555555;
-}
 
 .product-item .btn-buy {
     float: right;
@@ -44,4 +33,36 @@
 .product-item::after {
     display:block;
     clear:both;
+}
+
+.form-feedback {
+    width: 300px;
+}
+
+input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+textarea {
+    width: 100%;
+}
+
+.black-button {
+    border-radius: 5px;
+    border: 0px;
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    padding: 10px;    
+}
+
+.black-button:hover {
+    background-color: #555555;
+    cursor: pointer;
+}
+
+.black-button_sm {
+    padding: 4px;
+    border-radius: 2px;
 }

@@ -20,3 +20,4 @@ include ROOT . "/../engine/news.php";
 include ROOT . "/../engine/catalog.php";
 include ROOT . "/../engine/feedback.php";
 include ROOT . "/../engine/functions.php";
+include ROOT . "/../engine/cart.php";

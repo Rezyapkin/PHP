@@ -1,0 +1,69 @@
+<?php
+
+$errors_cart_messages = [
+     'getItems' => 'Ошибка получения товаров из корзины',
+     'addItem' => 'Ошибка добавления товара в корзину',
+     'deleteItem' => 'Ошибка удаления товара из корзины',
+     'editItem' => 'Ошибка изменения товара в корзине',
+     'getCountItems' => 'Ошибка получения количества товаров в корзине',
+];
+
+$actions_cart_messages = [
+    'addItem' => 'add',
+    'deleteItem' => 'delete',
+    'editItem' => 'edit',
+];
+
+function doActionCart($method, $params = []) {
+    global $errors_cart_messages;
+    global $actions_cart_messages;
+
+    //API работает как c GET, так и с POST
+    $params['action'] = $actions_cart_messages[$method];
+    $params['cart_id'] = (int)$_REQUEST['cart_id'];
+    $params['product_id'] = (int)$_REQUEST['product_id'];
+    $params['quatntity'] = (int)$_REQUEST['quatntity'];
+
+    switch ($method) {
+        case 'getItems':
+            $result = getCartItems($params);  
+            $finish = 1;
+            break;
+
+        case 'addItem':
+            $result = addCartItem($params);    
+            break;
+
+        case 'deleteItem':
+            $result = deleteCartItem($params); 
+            break;
+
+        case 'editItem':
+            $result = editCartItem($params); 
+            break;
+    
+        case 'getCountItems':
+            $result = getCountCartItems($params);
+            $finish = 1;
+            break;
+    
+        default:
+            $response = ['error' => 'Метод {$method} API не найден. Ознакомьтесь с документацией к API Cart.'];     
+    }
+
+    if ($result) {
+        $response = ['result' => $result];
+        
+        if (!$finish) {
+            $response = ['action' => $params['action'],
+                         'id' => $params['cart_id'],
+                         'result' => getCartItemByCartId($params['cart_id']),
+                        ];    
+       };
+
+    } else if (!$response) {
+        $response = ['error' => $errors_cart_messages[$method]];
+    }
+
+    echo json_encode($response); 
+}
