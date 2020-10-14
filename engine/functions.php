@@ -6,25 +6,23 @@
 function prepareVariables(&$page, $action='', $id=0)
 {
     $params = [];
+    $params['count_in_cart'] = (int)getTotalCart($params)['count'];
     $params['layout'] = 'main';
-    $uri = explode('?',$_SERVER['REQUEST_URI'])[0];
-    $uri_ar = explode('/',$uri);
 
     switch ($page) {
         case 'index':
             $params['name'] = 'admin';
             break;
         case 'api':
-      
-            $fileName = ROOT . "/api/{$uri_ar[2]}.php";
+            $api = URI_AR[2];
+            $fileName = ROOT . "/api/{$api}.php";
             if (file_exists($fileName)) {
                 include $fileName;
-                doActionCart($uri_ar[3]);
                 Die();
             } else {
                 header('HTTP/1.0 404 Not Found');
                 header('Status: 404 Not Found');
-                Die("API {$uri_ar[2]} не существует.");
+                Die("API {$api} не существует.");
             }            
             break;
 
@@ -63,7 +61,10 @@ function prepareVariables(&$page, $action='', $id=0)
                 }              
             } 
             $params['catalog'] = getProducts();
-            break;    
+            break;  
+            
+        case 'cart':
+            break;            
 
         default:
             header('HTTP/1.0 404 Not Found');

@@ -1,3 +1,7 @@
+* {
+    margin: 0;
+    padding: 0;
+}
 
 .product-item {
     margin-bottom: 20px;
@@ -55,6 +59,7 @@ textarea {
     color: white;
     text-decoration: none;
     padding: 10px;    
+    margin: 5px 5px 5px 0px;
 }
 
 .black-button:hover {
@@ -63,6 +68,75 @@ textarea {
 }
 
 .black-button_sm {
-    padding: 4px;
-    border-radius: 2px;
+    padding: 4px 10px;
+    border-radius: 4px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;    
+    height: 40px;
+    padding: 10px;
+    background-color: #555555;
+    color: white;
+}
+
+.header a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+}
+
+.header a:hover {
+    border-bottom: 1px solid white;
+}
+
+.header__menu {
+    display: flex;
+    align-content: center;
+}
+
+hr {
+    height: 0px;
+    border-top: 0px;
+    border-bottom: 1px solid #555555;
+    outline: 0px;
+    margin: 10px 0px;
+}
+
+p {
+    margin: 10px 0;
+}
+
+h2 {
+    margin: 10px 0;
+}
+
+.container {
+    padding: 10px;
+}
+
+.cart__item {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;;
+}
+
+.cart__item_right {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+
+.total_cart{
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.cart__item_buttons {
+    margin-left: 10px;
 }

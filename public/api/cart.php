@@ -1,22 +1,21 @@
 <?php
 
-$errors_cart_messages = [
-     'getItems' => 'Ошибка получения товаров из корзины',
-     'addItem' => 'Ошибка добавления товара в корзину',
-     'deleteItem' => 'Ошибка удаления товара из корзины',
-     'editItem' => 'Ошибка изменения товара в корзине',
-     'getCountItems' => 'Ошибка получения количества товаров в корзине',
-];
 
-$actions_cart_messages = [
-    'addItem' => 'add',
-    'deleteItem' => 'delete',
-    'editItem' => 'edit',
-];
+function doActionCart($method) {
 
-function doActionCart($method, $params = []) {
-    global $errors_cart_messages;
-    global $actions_cart_messages;
+    $errors_cart_messages = [
+        'getItems' => 'Ошибка получения товаров из корзины',
+        'addItem' => 'Ошибка добавления товара в корзину',
+        'deleteItem' => 'Ошибка удаления товара из корзины',
+        'editItem' => 'Ошибка изменения товара в корзине',
+        'getTotal' => 'Ошибка получения итоговых значений корзины',
+   ];
+   
+   $actions_cart_messages = [
+       'addItem' => 'add',
+       'deleteItem' => 'delete',
+       'editItem' => 'edit',
+   ];
 
     //API работает как c GET, так и с POST
     $params['action'] = $actions_cart_messages[$method];
@@ -42,13 +41,12 @@ function doActionCart($method, $params = []) {
             $result = editCartItem($params); 
             break;
     
-        case 'getCountItems':
-            $result = getCountCartItems($params);
-            $finish = 1;
+        case 'getTotal':
+            $response = ['result' => getTotalCart($params)];
             break;
     
         default:
-            $response = ['error' => 'Метод {$method} API не найден. Ознакомьтесь с документацией к API Cart.'];     
+            $response = ['error' => "Метод {$method} API не найден. Ознакомьтесь с документацией к API Cart."];     
     }
 
     if ($result) {
@@ -67,3 +65,5 @@ function doActionCart($method, $params = []) {
 
     echo json_encode($response); 
 }
+
+doActionCart(URI_AR[3]);

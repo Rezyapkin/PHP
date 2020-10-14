@@ -5,27 +5,27 @@
 function getCartItems($params)
 {
     $session_id = session_id();
-    $sql = "SELECT cart.id as cart_id, product_id, name, quantity, price, quantity * price as total FROM cart 
+    $sql = "SELECT cart.id as cart_id, product_id, name, quantity, price, quantity * price as total, image FROM cart 
         JOIN products on product_id = products.id WHERE quantity > 0 AND (session_id = '{$session_id}' " . 
         ((isset($params['user_id'])) ? "OR user_id = {$params['user_id']} " : "")  
         . ") ORDER BY cart_id";
     return getAssocResult($sql);
 }
 
-function getCountCartItems($params) {
+function getTotalCart($params) {
     $session_id = session_id();
-    $sql = "SELECT COUNT(cart.id) as count FROM cart 
+    $sql = "SELECT COUNT(cart.id) as count, SUM(quantity * price) as total FROM cart 
         JOIN products on product_id = products.id WHERE quantity > 0 AND (session_id = '{$session_id}' " . 
         ((isset($params['user_id'])) ? "OR user_id = {$params['user_id']} " : "") . ")";
-
-    return getAssocResult($sql)[0]['count'];    
+    $res = getAssocResult($sql);
+    return $res[0];    
 
 }
 
 function getCartItemByProductId($id, $user_id = null)
 {
     $session_id = session_id();
-    $sql = "SELECT cart.id as cart_id, product_id, name, quantity, price, quantity * price as total FROM cart 
+    $sql = "SELECT cart.id as cart_id, product_id, name, quantity, price, quantity * price as total, image FROM cart 
         JOIN products on product_id = products.id WHERE products.id = '{$id}' AND (session_id = '{$session_id}' " . 
         ((isset($params['user_id'])) ? "OR user_id = {$params['user_id']} " : "")  
         . ") ORDER BY cart_id DESC";
@@ -36,7 +36,7 @@ function getCartItemByProductId($id, $user_id = null)
 function getCartItemByCartId($id, $user_id = null)
 {
     $session_id = session_id();
-    $sql = "SELECT cart.id as cart_id, product_id, name, quantity, price, quantity * price as total FROM cart 
+    $sql = "SELECT cart.id as cart_id, product_id, name, quantity, price, quantity * price, image as total FROM cart 
         JOIN products on product_id = products.id WHERE cart.id = '{$id}' AND (session_id = '{$session_id}' " . 
         ((isset($params['user_id'])) ? "OR user_id = {$params['user_id']} " : "") . ")";
     return getAssocResult($sql)[0];
@@ -60,6 +60,7 @@ function addCartItem(&$params)
         return editCartItem($params);
     };
 
+    //Тут еще проверяю на существование product_id в базе товаров
     $sql = "INSERT INTO cart (product_id, quantity, session_id, user_id)
          VALUES ((SELECT id FROM products WHERE id = '{$params['product_id']}'), '{$params['quantity']}', '{$session_id}', '" .
          (isset($params['user_id']) ? $params['user_id'] : 0) . "')";  
