@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 12 2020 г., 15:48
+-- Время создания: Окт 15 2020 г., 14:51
 -- Версия сервера: 10.3.22-MariaDB
 -- Версия PHP: 7.1.33
 
@@ -20,6 +20,29 @@ SET time_zone = "+00:00";
 --
 -- База данных: `geekbrains`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `cart`
+--
+
+CREATE TABLE `cart` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT 0,
+  `session_id` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `cart`
+--
+
+INSERT INTO `cart` (`id`, `product_id`, `quantity`, `user_id`, `session_id`) VALUES
+(5, 4, 9, 0, 'a0j1d788u6ivqfldismku134qam1hf5v'),
+(6, 5, 4, 0, 'a0j1d788u6ivqfldismku134qam1hf5v'),
+(7, 3, 2, 0, 'a0j1d788u6ivqfldismku134qam1hf5v');
 
 -- --------------------------------------------------------
 
@@ -42,7 +65,7 @@ INSERT INTO `feedback` (`id`, `name`, `feedback`) VALUES
 (4, 'Кто то ', 'Привет'),
 (5, 'admin', 'Забаню'),
 (6, 'Админ', 'Привет мир'),
-(10, 'Супер автор', 'Отличный отзыв');
+(10, 'Супер автор', 'Отличный отзыв 11');
 
 -- --------------------------------------------------------
 
@@ -64,7 +87,8 @@ CREATE TABLE `feedback_product` (
 INSERT INTO `feedback_product` (`id`, `name`, `feedback`, `product_id`) VALUES
 (1, 'Дмитрий', 'Ноутбук игровой ASUS F571GT-BQ703T нереально крут!', 3),
 (2, 'Иван И.', 'ASUS TUF Gaming FX705 AMD Edition бомбический ноут!', 4),
-(4, 'Работает очень туго(', 'Отзывы работают не быстро', 3);
+(4, 'Михаил', 'Отличный ноут. Отзывы поправил.', 3),
+(5, 'Вася', 'Люблю Mac', 5);
 
 -- --------------------------------------------------------
 
@@ -143,9 +167,37 @@ INSERT INTO `products` (`id`, `name`, `description`, `image`, `price`) VALUES
 (4, 'Ноутбук игровой ASUS TUF Gaming FX705DT-AU027T', 'ASUS TUF Gaming FX705 AMD Edition – это современный игровой ноутбук в корпусе повышенной прочности, которая подтверждена строгими тестами по стандарту MIL-STD-810G. В аппаратную конфигурацию устройства входит новейший процессор AMD Ryzen и дискретная видеокарта Radeon. IPS-дисплей NanoEdge со сверхтонкой рамкой поддерживает технологию адаптивной синхронизации AMD FreeSync, гарантируя высокое качество изображения. TUF Gaming FX705 AMD Edition – отличная игровая платформа по разумной цене!', 'asus2.jpg', 79990),
 (5, 'Ноутбук Apple MacBook Pro 13 i5 1,4/8Gb/512SSD Sil', ' Особого отношения к себе не требует, сам себя чистит от ошибок и всего мусора за исключением хвостов от удаленных программ (периодически приходится подчищать). Работал с видосами, быстро рендрит. Советую покупать больше памяти, или доп. ж/д для хранения. Есть интересные моменты с форматами чтения дисков, ж/дисков, флешек и т.д. Уточняйте с чем работает. ', 'mac.jpg', 59990);
 
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `login` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cookie_hash` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `last_action` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `users`
+--
+
+INSERT INTO `users` (`id`, `login`, `name`, `password_hash`, `cookie_hash`, `last_action`) VALUES
+(1, 'admin', 'Стив Джобс', '$2y$10$Tu4VWMKlDkq5Lkhz3liKL.6rbAKxs0IDMdmexD44pzn3wgWChCavC', '9476880135f882a3127fa28.72592390', '2020-10-15 06:37:24');
+
 --
 -- Индексы сохранённых таблиц
 --
+
+--
+-- Индексы таблицы `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Индексы таблицы `feedback`
@@ -179,20 +231,33 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `login` (`login`);
+
+--
 -- AUTO_INCREMENT для сохранённых таблиц
 --
+
+--
+-- AUTO_INCREMENT для таблицы `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT для таблицы `feedback_product`
 --
 ALTER TABLE `feedback_product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT для таблицы `gallery`
@@ -211,6 +276,12 @@ ALTER TABLE `news`
 --
 ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT для таблицы `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц

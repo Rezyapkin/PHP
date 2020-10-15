@@ -39,18 +39,16 @@
     clear:both;
 }
 
-.form-feedback {
-    width: 300px;
-}
 
-input {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
+input[type="text"], 
+input[type="password"], 
 textarea {
-    width: 100%;
+    width: 270px;
+    margin-bottom: 10px;
+    border: 1px solid #cccccc;
+    padding: 5px 10px;
 }
+
 
 .black-button {
     border-radius: 5px;
@@ -73,11 +71,8 @@ textarea {
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-content: center;    
-    height: 40px;
-    padding: 10px;
+    height: 80px;
+    padding: 5px;
     background-color: #555555;
     color: white;
 }
@@ -93,6 +88,20 @@ textarea {
     border-bottom: 1px solid white;
 }
 
+.header__login {
+    height: 20px;
+    margin: 0px 10px;
+}
+
+.header__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-content: center; 
+    flex-wrap: nowrap;   
+    height: 40px;
+    padding: 10px;
+}
+
 .header__menu {
     display: flex;
     align-content: center;
@@ -101,7 +110,7 @@ textarea {
 hr {
     height: 0px;
     border-top: 0px;
-    border-bottom: 1px solid #555555;
+    border-bottom: 1px solid #cccccc;
     outline: 0px;
     margin: 10px 0px;
 }
@@ -110,7 +119,7 @@ p {
     margin: 10px 0;
 }
 
-h2 {
+h2, h3 {
     margin: 10px 0;
 }
 
@@ -122,7 +131,7 @@ h2 {
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
-    margin-bottom: 10px;;
+    margin-bottom: 10px;
 }
 
 .cart__item_right {
@@ -140,3 +149,44 @@ h2 {
 .cart__item_buttons {
     margin-left: 10px;
 }
+
+.auth-form, .form-feedback {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+}
+
+.auth-form__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;    
+}
+
+.auth-form__bottom div {
+    display: flex;
+    align-content: center;  
+    padding-top: 10px;
+}
+
+input[type="checkbox"] {
+    margin: 3px 3px 3px 4px;
+}
+
+.error_message {
+    color: red;
+    font-weight: 600;
+}
+
+.header__login {
+    display: flex;
+    justify-content: space-between;
+}
+
+a.header__login-href {
+    margin-right: 10px;
+    padding: 2px 0px;
+
+}    

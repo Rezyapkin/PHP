@@ -1,17 +1,43 @@
 <?php
 
 
+function prepareAuth($page, &$params) {
+
+    $params['auth'] = false;
+
+    if (isset($_GET['logout'])) {
+        logout();
+        if ($page == "profile") {
+            //Если разлогинились из профиля - отправляем на страницу авторизации
+            header('Location: /login');
+        } else {    
+            header('Location: '. URI); 
+        }
+        Die();
+    }
+    
+    if (is_auth()) {
+        $params['auth'] = true;
+        $params['user_login'] = $_SESSION['login'];
+        $params['user_name'] = $_SESSION['user_name'];
+        $params['user_id'] = $_SESSION['user_id'];
+    } 
+    
+}
+
 //Для каждой страницы готовим массив со своим набором переменных
 //для подстановки их в соотвествующий шаблон
 function prepareVariables(&$page, $action='', $id=0)
 {
     $params = [];
+    prepareAuth($page, $params);
+
     $params['count_in_cart'] = (int)getTotalCart($params)['count'];
     $params['layout'] = 'main';
 
     switch ($page) {
         case 'index':
-            $params['name'] = 'admin';
+            $params['auth_form'] = renderTemplate('auth', $params);
             break;
         case 'api':
             $api = URI_AR[2];
@@ -26,11 +52,49 @@ function prepareVariables(&$page, $action='', $id=0)
             }            
             break;
 
+        case 'login':
+            $page = 'auth';
+            if ($_POST) {
+                authInForm();
+                if (!is_auth()) {
+                } else {
+                     $params['message'] = 'Не верная пара логин/пароль!'; 
+                }  
+            }   
+            
+            if (is_auth()) {
+                header('Location: /');
+                Die();
+            }
+
+            break;            
+
         case 'feedback':
             doFeedbackAction($action, $id, $params);
             $params['feedback'] = getAllFeedback();
-
             break;
+
+        case 'profile':
+            if (!$params['auth'] ) {
+                $page = 'access_denied';
+                $params['auth_form'] = renderTemplate('auth', $params);
+            }
+
+            if ($_POST['current-password']) {
+                $lp = checkLoginPassword($params['user_login'], $_POST['current-password']);
+                if (!$lp) {
+                    $params['message'] = 'Не верная пара логин/пароль!';
+                    break;
+                }
+
+                if (updateProfile()) {
+                    $params['message'] = 'Данные вашего пофиля были успешно изменены.';
+                    $params['no_error'] = '_disable';
+                } else {
+                    $params['message'] = 'Ошибка. Данные в профиле сохранены не были.';
+                };
+            }
+            break;    
 
         case 'gallery':
             if ($_POST) {

@@ -1,10 +1,11 @@
 let feedbacks = document.getElementById('feedback');
+let user_name = '';
 
 //Очистить форму отзыва
 function clearFormFeedBack() {
     $("#send_feedback").text("Отправить");
     $("#send_feedback").data()['action'] = "add";
-    $("#fb_name").val('');
+    $("#fb_name").val(user_name);
     $("#fb_message").val('');
 }
 
@@ -119,6 +120,7 @@ function doFeedBack(action, id) {
 
 //После загрузки документа отрисуем отзывы и навесим обработчик на кнопку отправить
 $(document).ready(function() {
+    user_name = $("#fb_name").val();
     renderFeedBack();
     $("#send_feedback").on('click', function(evt){
         var id = $("#fb_id").val();
