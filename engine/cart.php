@@ -36,7 +36,7 @@ function getCartItemByProductId($id, $user_id = null)
 function getCartItemByCartId($id, $user_id = null)
 {
     $session_id = session_id();
-    $sql = "SELECT cart.id as cart_id, product_id, name, quantity, price, quantity * price, image as total FROM cart 
+    $sql = "SELECT cart.id as cart_id, product_id, name, quantity, price, quantity * price as total, image FROM cart 
         JOIN products on product_id = products.id WHERE cart.id = '{$id}' AND (session_id = '{$session_id}' " . 
         ((isset($params['user_id'])) ? "OR user_id = {$params['user_id']} " : "") . ")";
     return getAssocResult($sql)[0];
@@ -71,6 +71,16 @@ function addCartItem(&$params)
     }
 
     return $result;
+}
+
+function incQuantityItemCart(&$params) {
+    //Проверим есть ли такой же товар
+    $product = getCartItemByCartId($params['cart_id'], $params['user_id']);
+    if ($product) {
+        $params['quantity'] = (int)$product['quantity'] + (int)$params['quantity'];      
+        return editCartItem($params);
+    };    
+
 }
 
 function editCartItem(&$params)

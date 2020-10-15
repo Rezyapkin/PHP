@@ -8,6 +8,7 @@ function doActionCart($method) {
         'addItem' => 'Ошибка добавления товара в корзину',
         'deleteItem' => 'Ошибка удаления товара из корзины',
         'editItem' => 'Ошибка изменения товара в корзине',
+        'incQuantityItem' => 'Ошибка изменения количества товара в корзине',
         'getTotal' => 'Ошибка получения итоговых значений корзины',
    ];
    
@@ -15,13 +16,14 @@ function doActionCart($method) {
        'addItem' => 'add',
        'deleteItem' => 'delete',
        'editItem' => 'edit',
+       'incQuantityItem' => 'edit'
    ];
 
     //API работает как c GET, так и с POST
     $params['action'] = $actions_cart_messages[$method];
     $params['cart_id'] = (int)$_REQUEST['cart_id'];
     $params['product_id'] = (int)$_REQUEST['product_id'];
-    $params['quatntity'] = (int)$_REQUEST['quatntity'];
+    $params['quantity'] = (int)$_REQUEST['quantity'];
 
     switch ($method) {
         case 'getItems':
@@ -40,7 +42,11 @@ function doActionCart($method) {
         case 'editItem':
             $result = editCartItem($params); 
             break;
-    
+
+        case 'incQuantityItem':
+            $result = incQuantityItemCart($params); 
+            break;    
+
         case 'getTotal':
             $response = ['result' => getTotalCart($params)];
             break;

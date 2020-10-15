@@ -55,12 +55,14 @@ function setEditMode(dataset) {
 
 //Навесить обработчики изменения и удаления отзыва
 function setEventHandlers() {
+    $(".edit").off('click');
     $(".edit").on('click', function(evt){
         var par = evt.target.parentElement.parentElement;
         setEditMode(par.dataset);
         evt.preventDefault();
     });   
 
+    $(".delete").off('click');
     $(".delete").on('click', function(evt){
         doFeedBack('delete', evt.target.dataset['id']);
         evt.preventDefault();
