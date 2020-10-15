@@ -16,7 +16,7 @@ if ($_POST) {
         'type' => ($typesFeedback[$_POST['type']]) ? $_POST['type'] : 'site',
         'name' => mysqli_real_escape_string(getDb(), (string)htmlspecialchars(strip_tags($_POST['name']))),
         'feedback' => mysqli_real_escape_string(getDb(), (string)htmlspecialchars(strip_tags($_POST['feedback']))),
-        'c_id' => isset($_POST['c_id']) ? (int)$_POST['c_id'] : null, //это id элемента к которому оставляются отзывы
+        'c_id' => ($_POST['c_id']) ? (int)$_POST['c_id'] : null, //это id элемента к которому оставляются отзывы
     ];
     $result = doFeedbackAction($action, $params);
     if ($result) {

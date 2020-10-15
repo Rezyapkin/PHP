@@ -2,7 +2,7 @@
     <div class="header__login">
         <div></div>
         <?php if ($auth): ?>
-            <a class="header__login-href" href="/profile"><?=$user_name?></a>            
+            <a class="header__login-href" id="user_name" href="/profile"><?=$user_name?></a>            
         <?php else: ?>
             <a class="header__login-href" href="/login">Вход</a>
         <?php endif; ?>

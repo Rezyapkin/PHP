@@ -1,6 +1,7 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .product-item {
@@ -190,3 +191,8 @@ a.header__login-href {
     padding: 2px 0px;
 
 }    
+
+.feedback-author {
+    margin: 10px 0;
+    font-weight: 600;
+}

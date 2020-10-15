@@ -12,8 +12,8 @@ function updateTotalCart(header_cart = 'header_cart') {
         success: function(answer) {
             let res = JSON.parse(answer);
             if (!res.error) {
-                $('#'+header_cart).text(`Корзина (${res.result['count']})`);
-                updateTotalSumInCart(res.result['total']);                                     
+                $('#'+header_cart).text(`Корзина (${Number(res.result['count'])})`);
+                updateTotalSumInCart(Number(res.result['total']));                                     
             }
         }				
     })  

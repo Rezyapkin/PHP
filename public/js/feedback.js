@@ -13,7 +13,7 @@ function clearFormFeedBack() {
 function templateFeedBack(fb) {
     return `
     <div data-name='${fb.name}' data-message='${fb.feedback}' data-id='${fb.id}' id='${"fb_"+fb.id}'>
-       <strong>${fb.name}</strong>: 
+       <p class="feedback-author">${fb.name}:</p> 
        <div>
            ${fb.feedback} <a href="" data-id='${fb.id}' class='edit black-button black-button_sm'>Править</a> 
            <a href="" data-id='${fb.id}' class='delete black-button  black-button_sm'>Х</a>
@@ -120,7 +120,7 @@ function doFeedBack(action, id) {
 
 //После загрузки документа отрисуем отзывы и навесим обработчик на кнопку отправить
 $(document).ready(function() {
-    user_name = $("#fb_name").val();
+    user_name = $("#user_name").text();
     renderFeedBack();
     $("#send_feedback").on('click', function(evt){
         var id = $("#fb_id").val();
