@@ -107,7 +107,7 @@ function changeStatus($u_id, $status) {
     return executeSql($sql);
 }
 
-function getOrders() {
+function getOrders($count = 20) {
     $is_admin = is_admin();
     if (!is_auth() || !is_admin) {
         return false;
@@ -118,7 +118,7 @@ function getOrders() {
         JOIN order_items ON orders.id=order_items.order_id " . 
         ((!$is_admin) ? " WHERE (NOT user_id = '0') AND user_id='{$user_id}' " : "")
         . "GROUP BY orders.u_id, orders.id, date, status
-        ORDER BY date DESC";
+        ORDER BY date DESC LIMIT {$count}";
 
     return getAssocResult($sql); 
 }
