@@ -43,7 +43,8 @@
 
 input[type="text"], 
 input[type="password"], 
-textarea {
+textarea,
+select {
     width: 270px;
     margin-bottom: 10px;
     border: 1px solid #cccccc;
@@ -147,6 +148,13 @@ h2, h3 {
     font-weight: bold;
 }
 
+.clearfix::after {
+    content: '';
+    clear: both;
+    overflow: hidden;
+    display: block;
+}
+
 .cart__item_buttons {
     margin-left: 10px;
 }
@@ -195,4 +203,8 @@ a.header__login-href {
 .feedback-author {
     margin: 10px 0;
     font-weight: 600;
+}
+
+#make_order {
+    display: none;
 }

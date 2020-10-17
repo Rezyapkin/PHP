@@ -21,6 +21,7 @@ function prepareAuth($page, &$params) {
         $params['user_login'] = $_SESSION['login'];
         $params['user_name'] = $_SESSION['user_name'];
         $params['user_id'] = $_SESSION['user_id'];
+        $params['is_admin'] = is_admin();
     } 
     
 }
@@ -39,6 +40,7 @@ function prepareVariables(&$page, $action='', $id=0)
         case 'index':
             $params['auth_form'] = renderTemplate('auth', $params);
             break;
+        
         case 'api':
             $api = URI_AR[2];
             $fileName = ROOT . "/api/{$api}.php";
@@ -68,6 +70,24 @@ function prepareVariables(&$page, $action='', $id=0)
             }
 
             break;            
+
+        case 'makeOrder':
+            if (!$_POST) {
+                header('Location: /cart'); 
+                Die(); 
+            };
+            $result = makeOrder($params);
+            break;
+        
+        case 'order': 
+            $result = getOrderParamsByUid(URI_AR[2]);
+            if ($result) {
+                $params['u_id'] = URI_AR[2];
+                $params = array_merge($params, $result);
+            } else {
+                $params['error'] = 'Неверный ID';
+            }
+            break;
 
         case 'feedback':
             doFeedbackAction($action, $id, $params);

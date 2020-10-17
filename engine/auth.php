@@ -21,6 +21,11 @@ function clearDataAuthInSession() {
     unset($_SESSION['user_id']);
 }
 
+function is_admin() {
+    $sql = "SELECT is_admin FROM users where id='{$_SESSION['user_id']}'";
+    return getAssocResult($sql)[0]['is_admin'];
+}
+
 function is_auth() {
     //Если в сессии есть логин, то смысл стучаться к базе?
     if (!isset($_SESSION['login']) && isset($_COOKIE['hash'])) {

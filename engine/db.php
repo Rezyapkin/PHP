@@ -34,3 +34,12 @@ function getAssocResult($sql) {
 function executeSql($sql) {
     return @mysqli_query(getDb(), $sql) or die(mysqli_error(getDb()));
 }
+
+//multi
+function multiExecuteSql($sql) {
+    return @mysqli_multi_query(getDb(), $sql) or die(mysqli_error(getDb()));
+}
+
+function getProtectStr($str) {
+    return mysqli_real_escape_string(getDb(), (string)htmlspecialchars(strip_tags($str)));
+}

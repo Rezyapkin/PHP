@@ -2,6 +2,11 @@ var cartElements = null;
 
 function updateTotalSumInCart(total) {
     $('#total_cart').html(`Итого: ${Number(total)} &#8381;`);
+    if (Number(total)>0) {    
+        $('#make_order').show();
+    } else {
+        $('#make_order').hide();
+    }    
 }
 
 function updateHeaderCart(count) {
@@ -35,7 +40,7 @@ function templateCartItem(cartItem) {
             <a href="/catalog/${cartItem['product_id']}">${cartItem['name']}</a>
         </div>    
         <div class="cart__item_right">    
-            <div>${cartItem['quantity']} X ${cartItem['price']} = ${cartItem['total']} &#8381;</div>
+            <div>${cartItem['quantity']} X ${cartItem['price']} = ${cartItem['total']}c</div>
             <div class="cart__item_buttons">
                 <a href="" data-cart_id='${cartItem['cart_id']}' data-action='subItem' class='cart-item-edit black-button black-button_sm'>-</a>
                 <a href="" data-cart_id='${cartItem['cart_id']}' data-action='addItem' class='cart-item-edit black-button black-button_sm'>+</a>

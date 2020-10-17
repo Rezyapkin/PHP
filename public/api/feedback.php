@@ -14,13 +14,13 @@ if ($_POST) {
     $params = [
         'id' => is_null($_POST['id']) ?  null : (int)$_POST['id'],
         'type' => ($typesFeedback[$_POST['type']]) ? $_POST['type'] : 'site',
-        'name' => mysqli_real_escape_string(getDb(), (string)htmlspecialchars(strip_tags($_POST['name']))),
-        'feedback' => mysqli_real_escape_string(getDb(), (string)htmlspecialchars(strip_tags($_POST['feedback']))),
+        'name' => getProtectStr($_POST['name']),
+        'feedback' => getProtectStr($_POST['feedback']),
         'c_id' => ($_POST['c_id']) ? (int)$_POST['c_id'] : null, //это id элемента к которому оставляются отзывы
     ];
 
     $result = doFeedbackAction($action, $params);
-    
+
     if ($result) {
         if ($action == 'add') {
             $params['id'] = mysqli_insert_id(getDb());

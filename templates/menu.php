@@ -14,6 +14,9 @@
         <a href="/gallery">Галерея</a>
         <a href="/news">Новости</a>
         <a href="/feedback">Отзывы</a>
+        <?php if ($is_admin): ?>
+            <a href = "/admin">Админка</a>
+        <?php endif; ?>    
     </div>
     <div class="header__cart">
         <a id="header_cart" href="/cart">Корзина (<?=$count_in_cart?>)</a>
