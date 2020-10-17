@@ -68,19 +68,15 @@ function doFeedbackAction($action, $params) {
     switch ($action) {
         case 'add':
             return addFeedBack($params);
-            break;
     
         case 'save':
             return updateFeedBack($params);
-            break;
     
         case 'delete':
-            return deleteFeedBack($params);
-            break;    
+            return deleteFeedBack($params); 
     
         case 'get':
             return getFeedBackById($params);
-            break;
 
         default:
             return false;    

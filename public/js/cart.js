@@ -1,10 +1,20 @@
-function updateTotalSumInCart(total) {
-    $('#total_cart').html(`Итого: ${total} &#8381;`);
+var cartElements = null;
 
+function updateTotalSumInCart(total) {
+    $('#total_cart').html(`Итого: ${Number(total)} &#8381;`);
+}
+
+function updateHeaderCart(count) {
+    $('#header_cart').text(`Корзина (${Number(count)})`);
+}
+
+function renderTotalCart(total, count) {
+    updateTotalSumInCart(total);
+    updateHeaderCart(count);
 }
 
 //Обновляет количество товаров в корзине
-function updateTotalCart(header_cart = 'header_cart') {
+function updateTotalCart() {
     $.ajax({
         url: "/api/cart/getTotal",
         type: "GET",
@@ -12,8 +22,7 @@ function updateTotalCart(header_cart = 'header_cart') {
         success: function(answer) {
             let res = JSON.parse(answer);
             if (!res.error) {
-                $('#'+header_cart).text(`Корзина (${Number(res.result['count'])})`);
-                updateTotalSumInCart(Number(res.result['total']));                                     
+                renderTotalCart(res.result['sum'], res.result['count']);                             
             }
         }				
     })  
@@ -28,8 +37,8 @@ function templateCartItem(cartItem) {
         <div class="cart__item_right">    
             <div>${cartItem['quantity']} X ${cartItem['price']} = ${cartItem['total']} &#8381;</div>
             <div class="cart__item_buttons">
-                <a href="" data-cart_id='${cartItem['cart_id']}' data-quantity='-1' data-action='incQuantityItem' class='cart-item-edit black-button black-button_sm'>-</a>
-                <a href="" data-cart_id='${cartItem['cart_id']}' data-quantity='1' data-action='incQuantityItem' class='cart-item-edit black-button black-button_sm'>+</a>
+                <a href="" data-cart_id='${cartItem['cart_id']}' data-action='subItem' class='cart-item-edit black-button black-button_sm'>-</a>
+                <a href="" data-cart_id='${cartItem['cart_id']}' data-action='addItem' class='cart-item-edit black-button black-button_sm'>+</a>
                 <a href="" data-cart_id='${cartItem['cart_id']}' data-action='deleteItem' class='cart-item-edit black-button black-button_sm'>X</a>
             </div>
         </div>
@@ -38,22 +47,23 @@ function templateCartItem(cartItem) {
 }
 
 function renderCart(id) {
-    cart = document.getElementById(id);
-    if (!cart) return;
+    cartElements = document.getElementById(id);
+    if (!cartElements) return;
     $.ajax({
         url: "/api/cart/getItems",
         type: "GET",
-        error: function() {console.log("Cart API (getItems): ошибка получения количества товаров в корзине.")},
+        error: function() {console.log("Cart API (getItems): ошибка получения товаров из корзины.")},
         success: function(answer) {
             let res = JSON.parse(answer);
             if (res.error || !res.result) return;
-            cart.innerHTML = '';
+            cartElements.innerHTML = '';
             total = 0;
+            count = 0;
             for (item in res.result) {
-                cart.insertAdjacentHTML("beforeend", templateCartItem(res.result[item]));   
-                total += Number(res.result[item]['total']);                               
+                cartElements.insertAdjacentHTML("beforeend", templateCartItem(res.result[item]));   
+                total += Number(res.result[item]['total']);                          
             }
-            updateTotalSumInCart(total);   
+            updateTotalSumInCart(total);  
             setEventHandlers();     
         }				
     }); 
@@ -70,34 +80,43 @@ function doActCart(el, method="addItem", params={}) {
             if (answer.error) {
                 console.log(`Ошибка работы метода ${method}.`);   
             } else {
-                correctCartItem(answer.action, answer.id, answer.result);
-                updateTotalCart();    
+                correctCartItem(answer['result']['id'], answer['result']['current_item']);
+                if (answer['result']['total']) {
+                    renderTotalCart(answer['result']['total']['sum'], answer['result']['total']['count']);    
+                }
             }      	            			
         }
     });    
 }
 
-function correctCartItem(action, id, cartItem) {
-    var el = $("#cart_item_"+id);
-    switch (action) {
-        case 'delete':
-            el.remove();
-            break;
-        case 'edit':
-            el.replaceWith(templateCartItem(cartItem));
-            setEventHandlers("#cart_item_"+id);  
-            break;
-    }       
+function correctCartItem(id, cartItem) {
+    if (!cartElements) {
+        return;
+    }
+    const el_name = "#cart_item_"+id; 
+    const el = $(el_name);
+    
+    if (cartItem) {
+        let tmpl = templateCartItem(cartItem);
+        if (el) {
+            el.replaceWith(tmpl);    
+        } else {
+            cartElements.insertAdjacentHTML("beforeend", tmpl); 
+        };  
+        setEventHandlers(el_name);  
+    } else if (el) {
+        //есть ID элемента, но нет товара в базе
+        el.remove();
+    }     
 }
 
 //Навешивает обработчики изменения и удаления отзыва
 function setEventHandlers(elements='.cart-item-edit') {
-    $(".cart-item-edit").off('click');
-    $(".cart-item-edit").on('click', function(evt){
+    $(elements).off('click');
+    $(elements).on('click', function(evt){
         doActCart(evt.target, evt.target.dataset['action'], evt.target.dataset);
         evt.preventDefault();
-    });   
-     
+    });     
 }
 
 $(document).ready(function() {

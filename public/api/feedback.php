@@ -18,7 +18,9 @@ if ($_POST) {
         'feedback' => mysqli_real_escape_string(getDb(), (string)htmlspecialchars(strip_tags($_POST['feedback']))),
         'c_id' => ($_POST['c_id']) ? (int)$_POST['c_id'] : null, //это id элемента к которому оставляются отзывы
     ];
+
     $result = doFeedbackAction($action, $params);
+    
     if ($result) {
         if ($action == 'add') {
             $params['id'] = mysqli_insert_id(getDb());

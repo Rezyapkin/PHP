@@ -5,6 +5,7 @@
 //TODO Сделать пути абсолютными
 session_start();
 include $_SERVER['DOCUMENT_ROOT'] . "/../config/config.php";
+include ROOT . "/../engine/lib_autoload.php";
 
 //Читаем параметр page из url, чтобы определить, какую страницу-шаблон
 //хочет увидеть пользователь, по умолчанию это будет index

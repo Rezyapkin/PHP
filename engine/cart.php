@@ -1,7 +1,5 @@
 <?php
 
-
-
 function getCartItems($params)
 {
     $session_id = session_id();
@@ -14,7 +12,7 @@ function getCartItems($params)
 
 function getTotalCart($params) {
     $session_id = session_id();
-    $sql = "SELECT COUNT(cart.id) as count, SUM(quantity * price) as total FROM cart 
+    $sql = "SELECT SUM(quantity) as count, SUM(quantity * price) as sum FROM cart 
         JOIN products on product_id = products.id WHERE quantity > 0 AND (session_id = '{$session_id}' " . 
         ((isset($params['user_id'])) ? "OR user_id = {$params['user_id']} " : "") . ")";
     $res = getAssocResult($sql);
@@ -46,66 +44,60 @@ function addCartItem(&$params)
 {
     $session_id = session_id();
 
-    //Проверим есть ли такой же товар
-    $product = getCartItemByProductId($params['product_id'], $params['user_id']);
-    
     if (!$params['quantity']) {
         $params['quantity'] = 1;
+    }    
+
+    //Проверим есть ли такой же товар
+    if ($params['cart_id']) {
+        $product = getCartItemByCartId($params['cart_id'], $params['user_id']);        
     }
 
-    if ($product) {
+    if (!$product) {
+        $product = getCartItemByProductId($params['product_id'], $params['user_id']);
         $params['cart_id'] = $product['cart_id'];
-        $params['quantity'] += $product['quantity'];
-        $params['action'] = 'edit'; 
-        return editCartItem($params);
-    };
+    }
 
-    //Тут еще проверяю на существование product_id в базе товаров
-    $sql = "INSERT INTO cart (product_id, quantity, session_id, user_id)
-         VALUES ((SELECT id FROM products WHERE id = '{$params['product_id']}'), '{$params['quantity']}', '{$session_id}', '" .
-         (isset($params['user_id']) ? $params['user_id'] : 0) . "')";  
+
+    if ($product) {
+        $params['quantity'] += $product['quantity'];
+        return editCartItem($params);
+    } else {
+        $sql = "INSERT INTO cart (product_id, quantity, session_id, user_id)
+        VALUES ((SELECT id FROM products WHERE id = '{$params['product_id']}'), '{$params['quantity']}', '{$session_id}', '" .
+        (isset($params['user_id']) ? $params['user_id'] : 0) . "')";  
+    }
 
     $result = executeSql($sql);
-    if ($result) {
+
+    if ($result && !$product) {
         $params['cart_id'] = mysqli_insert_id(getDb());
     }
 
     return $result;
 }
 
-function incQuantityItemCart(&$params) {
-    //Проверим есть ли такой же товар
-    $product = getCartItemByCartId($params['cart_id'], $params['user_id']);
-    if ($product) {
-        $params['quantity'] = (int)$product['quantity'] + (int)$params['quantity'];      
-        return editCartItem($params);
-    };    
-
-}
 
 function editCartItem(&$params)
 {
     $session_id = session_id();
-    $id = $params['cart_id'];
-    $qty = $params['quantity'];
 
     if ($params['quantity'] <= 0) {     
-        $params['action'] = 'delete';
         $result = deleteCartItem($params);
     }
 
-    $sql = "UPDATE cart SET quantity = {$qty} WHERE (id='{$id}') 
+    $sql = "UPDATE cart SET quantity = {$params['quantity']} WHERE (id='{$params['cart_id']}') 
          AND (session_id = '{$session_id}' " . 
          ((isset($params['user_id'])) ? "OR user_id = {$params['user_id']} " : "") . ")";        
+
     return executeSql($sql);
 }   
 
 function deleteCartItem(&$params)
 {
     $session_id = session_id();
-    $id = $params['cart_id'];
 
-    $sql = "DELETE FROM cart WHERE (id = '{$id}') 
+    $sql = "DELETE FROM cart WHERE (id = '{$params['cart_id']}') 
         AND (session_id = '{$session_id}' " . 
         ((isset($params['user_id'])) ? "OR user_id = {$params['user_id']} " : "")  
         . ") ";        
