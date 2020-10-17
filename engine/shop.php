@@ -72,8 +72,7 @@ function getOrderStatuses() {
     if ($result) {
         preg_match('#^enum\((.*?)\)$#ism', $result[0]['Type'], $matches);
         $res = str_getcsv($matches[1], ",", "'");
-    } 
-    array_pop($res);    
+    }   
     return $res;
 }
 
@@ -102,7 +101,6 @@ function changeStatus($u_id, $status) {
     if (!is_admin()) {
         return false;
     }    
-    
     $sql = "UPDATE orders SET status='{$status}' WHERE u_id='{$u_id}'";
     return executeSql($sql);
 }

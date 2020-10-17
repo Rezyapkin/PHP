@@ -67,7 +67,7 @@ function checkLoginPassword($login, $pass) {
 
 function updateProfile() {
     $login = mb_strtolower(getProtectStr($_POST['login']));
-    $name = getProtectStrs($_POST['name']);
+    $name = getProtectStr($_POST['name']);
     if ($_POST['new-password']) {
         $pass =  password_hash($_POST['new-password'], PASSWORD_DEFAULT); 
         $hash = uniqid(rand(), true);     

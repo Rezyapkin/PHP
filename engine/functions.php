@@ -152,12 +152,12 @@ function prepareVariables(&$page, $action='', $id=0)
                 } else {
                     $params['message'] = 'Ошибка. Данные в профиле сохранены не были.';
                 };
-            } else {
-                $result = getOrders();
-                if ($result) {
-                    $params['order_items'] = $result;
-                    $params['orders'] = renderTemplate('orders', $params);      
-                }
+            }; 
+
+            $result = getOrders();
+            if ($result) {
+                $params['order_items'] = $result;
+                $params['orders'] = renderTemplate('orders', $params);      
             }
             break;    
 

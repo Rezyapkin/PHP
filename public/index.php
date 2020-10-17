@@ -3,6 +3,7 @@
 
 //Первым делом подключим файл с константами настроек
 //TODO Сделать пути абсолютными
+
 session_start();
 include $_SERVER['DOCUMENT_ROOT'] . "/../config/config.php";
 include ROOT . "/../engine/lib_autoload.php";
