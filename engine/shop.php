@@ -82,8 +82,8 @@ function getOrderParamsByUid($uid) {
     $uid = getProtectStr($uid); 
     $sql = "SELECT orders.id, date, status, name, address, phone, SUM(order_items.quantity * order_items.price) as total FROM orders 
         JOIN order_items ON orders.id=order_items.order_id 
-        WHERE u_id='{$uid}'
-        GROUP BY orders.id, orders.date";
+        WHERE u_id='{$uid}' 
+        GROUP BY orders.id, date, status, name, address, phone";
     $par = getAssocResult($sql)[0];
     if ($par) {
         $sql = "SELECT product_id as id, products.name, order_items.quantity, order_items.price, order_items.quantity * order_items.price as total FROM order_items 
@@ -105,4 +105,20 @@ function changeStatus($u_id, $status) {
     
     $sql = "UPDATE orders SET status='{$status}' WHERE u_id='{$u_id}'";
     return executeSql($sql);
+}
+
+function getOrders() {
+    $is_admin = is_admin();
+    if (!is_auth() || !is_admin) {
+        return false;
+    }    
+    $user_id = (int)$_SESSION['user_id'];
+
+    $sql = "SELECT orders.u_id, orders.id, date, status, SUM(order_items.quantity * order_items.price) as total FROM orders 
+        JOIN order_items ON orders.id=order_items.order_id " . 
+        ((!$is_admin) ? " WHERE (NOT user_id = '0') AND user_id='{$user_id}' " : "")
+        . "GROUP BY orders.u_id, orders.id, date, status
+        ORDER BY date DESC";
+
+    return getAssocResult($sql); 
 }

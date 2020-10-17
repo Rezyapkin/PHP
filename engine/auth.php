@@ -57,7 +57,7 @@ function authInForm() {
 }
 
 function checkLoginPassword($login, $pass) {
-    $login = mysqli_real_escape_string(getDb(), strip_tags(stripslashes($login)));
+    $login = mb_strtolower(getProtectStr($login));
     $sql = "SELECT * FROM users WHERE login = '{$login}'";
     $row = getAssocResult($sql)[0];
     if (password_verify($pass, $row['password_hash'])) {
@@ -66,13 +66,12 @@ function checkLoginPassword($login, $pass) {
 }
 
 function updateProfile() {
-    $login = mysqli_real_escape_string(getDb(), strip_tags(stripslashes($_POST['login'])));
-    $name = mysqli_real_escape_string(getDb(), strip_tags(stripslashes($_POST['name'])));
+    $login = mb_strtolower(getProtectStr($_POST['login']));
+    $name = getProtectStrs($_POST['name']);
     if ($_POST['new-password']) {
-        $pass =  password_hash(mysqli_real_escape_string(getDb(), strip_tags(stripslashes($_POST['new-password']))), PASSWORD_DEFAULT); 
+        $pass =  password_hash($_POST['new-password'], PASSWORD_DEFAULT); 
         $hash = uniqid(rand(), true);     
     }
-    $name = mysqli_real_escape_string(getDb(), strip_tags(stripslashes($_POST['name'])));
 
     $sql = "UPDATE users 
         SET
@@ -86,6 +85,26 @@ function updateProfile() {
         setcookie("hash", $hash, time() + 3600, '/');
     } 
     return $res;
+}
+
+function registerUser() {
+    $login = mb_strtolower(getProtectStr($_POST['login']));
+    $name = getProtectStr($_POST['name']);
+    if ($_POST['current-password']) {
+        $pass =  password_hash($_POST['current-password'], PASSWORD_DEFAULT); 
+    }
+
+    $sql = "INSERT INTO users (login, name, password_hash)
+        VALUES ('{$login}' , '{$name}' , '{$pass}')";
+    $res = executeSql($sql);
+    return $res;
+}   
+
+
+function isLoginExist($login) {
+    $login = mb_strtolower(getProtectStr($login));
+    $sql = "SELECT login FROM users where login='{$login}'";
+    return getAssocResult($sql)[0]['login'] == $login;    
 }
 
 function auth($login, $pass, $save = false) {

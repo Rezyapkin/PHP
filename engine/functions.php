@@ -53,7 +53,19 @@ function prepareVariables(&$page, $action='', $id=0)
                 Die("API {$api} не существует.");
             }            
             break;
-
+ 
+        case 'admin':
+            if ($params['is_admin']) {
+                $result = getOrders();
+            }
+                
+            if ($result) {
+                $params['order_items'] = $result;
+                $params['orders'] = renderTemplate('orders', $params);
+            } else {
+                $params['error'] = 'Доступ запрещен!';    
+            }    
+            break;    
         case 'login':
             $page = 'auth';
             if ($_POST) {
@@ -71,6 +83,32 @@ function prepareVariables(&$page, $action='', $id=0)
 
             break;            
 
+        case 'register': 
+            if (!$_POST) {
+                header('Location: ' . $_SERVER['HTTP_REFERER']);  
+            } else {
+                $page = 'auth';
+
+                if (!$_POST['current-password']) {
+                    $params['message2'] = 'Пользователь не создан, т.к. поле пароль не заполнено';
+                    break;
+                }
+                
+                if (isLoginExist($_POST['login'])) {
+                    $params['message2'] = "Пользователь с логином '{$_POST['login']}' существует";
+                    break;                   
+                }
+
+                $result = registerUser();
+                
+                if ($result) {
+                    $params['message2'] = "Пользователь {$_POST['login']} успешно создан! Вы можете авторизоваться.";                    
+                } else {
+                    $params['message2'] = 'Пользователь не был зарегистирован. Повторите попытку';
+                }
+                
+            };
+            break;    
         case 'makeOrder':
             if (!$_POST) {
                 header('Location: /cart'); 
@@ -98,6 +136,7 @@ function prepareVariables(&$page, $action='', $id=0)
             if (!$params['auth'] ) {
                 $page = 'access_denied';
                 $params['auth_form'] = renderTemplate('auth', $params);
+            break;
             }
 
             if ($_POST['current-password']) {
@@ -113,6 +152,12 @@ function prepareVariables(&$page, $action='', $id=0)
                 } else {
                     $params['message'] = 'Ошибка. Данные в профиле сохранены не были.';
                 };
+            } else {
+                $result = getOrders();
+                if ($result) {
+                    $params['order_items'] = $result;
+                    $params['orders'] = renderTemplate('orders', $params);      
+                }
             }
             break;    
 
