@@ -12,6 +12,7 @@ $errors_cart_messages = [
    
 
 //API работает как c GET, так и с POST
+
 $params['action'] = $actions_cart_messages[$method];
 $params['cart_id'] = (int)$_REQUEST['cart_id'];
 $params['product_id'] = (int)$_REQUEST['product_id'];
@@ -19,6 +20,7 @@ $params['quantity'] = (int)$_REQUEST['quantity'];
 if ($params['quantity'] == 0) {
     $params['quantity'] = 1;
 }
+
 
 switch (URI_AR[3]) {
     case 'getItems': 
@@ -55,7 +57,7 @@ if ($result) {
         'result' => [
             'id' => $params['cart_id'],
             'total' => getTotalCart($params),
-            'current_item' => getCartItemByCartId($params['cart_id']),
+            'current_item' => getCartItemByCartId($params['cart_id'], $params['user_id']),
         ],
     ];    
 

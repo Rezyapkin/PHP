@@ -15,7 +15,6 @@ function prepareAuth($page, &$params) {
         }
         Die();
     }
-    
     if (is_auth()) {
         $params['auth'] = true;
         $params['user_login'] = $_SESSION['login'];
