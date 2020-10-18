@@ -55,7 +55,7 @@ function prepareVariables(&$page, $action='', $id=0)
  
         case 'admin':
             if ($params['is_admin']) {
-                $result = getOrders();
+                $result = getOrders(false);
             }
                 
             if ($result) {

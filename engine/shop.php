@@ -105,7 +105,7 @@ function changeStatus($u_id, $status) {
     return executeSql($sql);
 }
 
-function getOrders($count = 20) {
+function getOrders($only_user_orders = true, $count = 20) {
     $is_admin = is_admin();
     if (!is_auth() || !is_admin) {
         return false;
@@ -114,7 +114,7 @@ function getOrders($count = 20) {
 
     $sql = "SELECT orders.u_id, orders.id, date, status, SUM(order_items.quantity * order_items.price) as total FROM orders 
         JOIN order_items ON orders.id=order_items.order_id " . 
-        ((!$is_admin) ? " WHERE (NOT user_id = '0') AND user_id='{$user_id}' " : "")
+        ((!$is_admin || $only_user_orders) ? " WHERE (NOT user_id = '0') AND user_id='{$user_id}' " : "")
         . "GROUP BY orders.u_id, orders.id, date, status
         ORDER BY date DESC LIMIT {$count}";
 
