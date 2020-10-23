@@ -22,7 +22,7 @@ function newOrderfromCart($params=[]) {
     
     foreach ($sqls as $sql) {
         $result = executeSql($sql);
-        if (!result) {
+        if (!$result) {
             break;
         }
     } 
@@ -41,7 +41,6 @@ function makeOrder(&$params = [])
     $params_api['name'] = getProtectStr($_POST['name']);
     $params_api['phone'] = preg_replace("/[^0-9]/", '', $_POST['phone']);
     $params_api['address'] = getProtectStr($_POST['address']);
-    $result = false;
 
     $no_fill = [];
     foreach ($params_api as $key => $value) {
@@ -77,7 +76,6 @@ function getOrderStatuses() {
 }
 
 function getOrderParamsByUid($uid) {
-    $par = [];
     $uid = getProtectStr($uid); 
     $sql = "SELECT orders.id, date, status, name, address, phone, SUM(order_items.quantity * order_items.price) as total FROM orders 
         JOIN order_items ON orders.id=order_items.order_id 
@@ -107,7 +105,7 @@ function changeStatus($u_id, $status) {
 
 function getOrders($only_user_orders = true, $count = 20) {
     $is_admin = is_admin();
-    if (!is_auth() || !is_admin) {
+    if (!is_auth() || !$is_admin) {
         return false;
     }    
     $user_id = (int)$_SESSION['user_id'];

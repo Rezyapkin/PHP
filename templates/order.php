@@ -28,7 +28,7 @@
         <?php foreach($items as $item): ?>
             <div class="cart__item">
                 <div>
-                    <a href="/catalog/<?=$item['product_id']?>"><?=$item['name']?></a>
+                    <a href="/catalog/<?=$item['id']?>"><?=$item['name']?></a>
                 </div>    
                 <div class="cart__item_right">    
                     <div><?=$item['quantity']?> X <?=$item['price']?> = <?=$item['total']?> &#8381;</div>

@@ -70,8 +70,7 @@ function prepareVariables(&$page, $action='', $id=0)
             if ($_POST) {
                 authInForm();
                 if (!is_auth()) {
-                } else {
-                     $params['message'] = 'Не верная пара логин/пароль!'; 
+                    $params['message'] = 'Не верная пара логин/пароль!'; 
                 }  
             }   
             
@@ -113,7 +112,7 @@ function prepareVariables(&$page, $action='', $id=0)
                 header('Location: /cart'); 
                 Die(); 
             };
-            $result = makeOrder($params);
+            makeOrder($params);
             break;
         
         case 'order': 
@@ -127,7 +126,7 @@ function prepareVariables(&$page, $action='', $id=0)
             break;
 
         case 'feedback':
-            doFeedbackAction($action, $id, $params);
+            doFeedbackAction($action, $params);
             $params['feedback'] = getAllFeedback();
             break;
 

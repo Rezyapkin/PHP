@@ -7,22 +7,23 @@
 session_start();
 include $_SERVER['DOCUMENT_ROOT'] . "/../config/config.php";
 include ROOT . "/../engine/lib_autoload.php";
+define("URI", explode('?',$_SERVER['REQUEST_URI'])[0]);
+define("URI_AR",  explode('/',URI));
 
 //Читаем параметр page из url, чтобы определить, какую страницу-шаблон
 //хочет увидеть пользователь, по умолчанию это будет index
 
-$url_array = explode('/', explode('?',$_SERVER['REQUEST_URI'])[0]); //Видеоизменил для работы с GET параметрами
 
-if (is_numeric($url_array[2])) {
-    $id = (int)$url_array[2];
+if (is_numeric(URI_AR[2])) {
+    $id = (int)URI_AR[2];
 } else  {
-    $id = (int)$url_array[3];
+    $id = (int)URI_AR[3];
 }
 
-if ($url_array[1] == "") {
+if (URI_AR[1] == "") {
     $page = 'index';
 } else {
-    $page = $url_array[1];
+    $page = URI_AR[1];
 }
 
 $params = prepareVariables($page, $action, $id);

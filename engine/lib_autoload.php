@@ -4,7 +4,7 @@ $file_name = basename(__FILE__);//Думаю, что правильнее так
 $lib_files = array_splice($files, 2);
 
 foreach ($lib_files as $file) {
-    if ($file != file_name) {
+    if ($file != $file_name) {
         include_once ENGINE_DIR . "/" . $file;
     }
 }
